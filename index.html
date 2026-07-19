@@ -6,41 +6,60 @@
   <title>ARPES kz Calculator</title>
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <style>
-    /* ── Dark theme ── */
+    /* ── Shared site theme (matches seankung.ca) ── */
+    :root {
+      --bg: #121212;        /* page background */
+      --panel: #1e1e1e;     /* inputs, cards, plot area */
+      --border: #333;       /* input/card borders */
+      --divider: #444;      /* section separator lines */
+      --text: #ffffff;      /* primary text */
+      --text-2: #ccc;       /* secondary text */
+      --text-3: #aaa;       /* tertiary/hints */
+      --accent: #80cbc4;    /* teal: headings, buttons, links, focus */
+      --accent-hover-bg: #2a3a3a;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #0d1117;
-      color: #c9d1d9;
-      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem 1rem;
+      padding: 1.2rem 1rem 2rem;
     }
 
+    .home-link {
+      align-self: flex-start;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .home-link a { color: var(--accent); text-decoration: none; }
+    .home-link a:hover { text-decoration: underline; }
+
     h1 {
-      font-size: 1.6rem;
-      color: #58a6ff;
+      color: var(--text);
       margin-bottom: 0.4rem;
       text-align: center;
     }
 
     .subtitle {
-      font-size: 0.9rem;
-      color: #8b949e;
+      font-size: 1rem;
+      color: var(--text-2);
       text-align: center;
       margin-bottom: 2rem;
     }
 
     .formula-box {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 8px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 3px;
       padding: 0.8rem 1.2rem;
       font-size: 0.88rem;
-      color: #a5d6ff;
+      color: var(--accent);
       font-family: monospace;
       text-align: center;
       margin-bottom: 2rem;
@@ -65,21 +84,21 @@
     }
 
     label {
-      font-size: 0.82rem;
-      color: #8b949e;
+      font-size: 0.9rem;
+      color: var(--text-2);
     }
 
     label span.unit {
-      color: #6e7681;
-      font-size: 0.78rem;
+      color: var(--text-3);
+      font-size: 0.85rem;
     }
 
     input[type="number"] {
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 6px;
-      color: #c9d1d9;
-      font-size: 0.95rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-size: 1rem;
       padding: 0.45rem 0.65rem;
       width: 100%;
       outline: none;
@@ -87,7 +106,7 @@
     }
 
     input[type="number"]:focus {
-      border-color: #58a6ff;
+      border-color: var(--accent);
     }
 
     /* Remove number spinners for cleaner look */
@@ -101,31 +120,21 @@
     }
 
     button {
-      padding: 0.55rem 1.8rem;
-      border-radius: 6px;
-      border: none;
-      font-size: 0.95rem;
+      background: var(--panel);
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      padding: 0.5rem 1.8rem;
+      font-size: 1rem;
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
     }
+    button:hover { background: var(--accent-hover-bg); }
     button:active { transform: scale(0.97); }
-
-    #btn-plot {
-      background: #1f6feb;
-      color: #fff;
-    }
-    #btn-plot:hover { background: #388bfd; }
-
-    #btn-reset {
-      background: #21262d;
-      color: #c9d1d9;
-      border: 1px solid #30363d;
-    }
-    #btn-reset:hover { background: #30363d; }
 
     .error-msg {
       color: #f85149;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       min-height: 1.2rem;
       margin-bottom: 0.5rem;
     }
@@ -134,7 +143,7 @@
       width: 100%;
       max-width: 900px;
       height: 500px;
-      border-radius: 8px;
+      border-radius: 3px;
       overflow: hidden;
     }
 
@@ -143,16 +152,16 @@
       width: 100%;
       margin-top: 1.5rem;
       padding: 0.9rem 1.2rem;
-      background: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: #8b949e;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 0.9rem;
+      color: var(--text-2);
       line-height: 1.6;
     }
 
     .notes a {
-      color: #58a6ff;
+      color: var(--accent);
       text-decoration: none;
     }
     .notes a:hover {
@@ -161,6 +170,8 @@
   </style>
 </head>
 <body>
+
+  <nav class="home-link"><a href="https://seankung.ca/">&larr; seankung.ca</a></nav>
 
   <h1>ARPES k<sub>z</sub> Calculator</h1>
   <p class="subtitle">
@@ -321,12 +332,12 @@
           x0: ehv, x1: ehv,
           y0: 0,   y1: 1,
           xref: "x", yref: "paper",
-          line: { color: "#3a4150", width: 1 },
+          line: { color: "#444", width: 1 },
         });
         xTickVals.push(ehv);
         xTickText.push(ehv.toFixed(1));
         yTickVals.push(n);
-        yTickText.push(n % 2 === 0 ? "\u0393" : "Z");
+        yTickText.push(n % 2 === 0 ? "Γ" : "Z");
       }
 
       // ── Plotly trace ──
@@ -335,9 +346,9 @@
         y: yArr,
         type: "scatter",
         mode: "lines",
-        // name: "k\u1D6B",
+        // name: "kᵫ",
         name: "kz",
-        line: { color: "#58a6ff", width: 3 },
+        line: { color: "#80cbc4", width: 3 },
         connectgaps: false,
         showlegend: false,
       };
@@ -356,25 +367,25 @@
 
       // ── Plotly layout (dark) ──
       const layout = {
-        paper_bgcolor: "#0d1117",
-        plot_bgcolor:  "#161b22",
-        font: { color: "#c9d1d9", family: "Segoe UI, system-ui, sans-serif" },
+        paper_bgcolor: "#121212",
+        plot_bgcolor:  "#1e1e1e",
+        font: { color: "#ccc", family: "Arial, sans-serif" },
         shapes,
         xaxis: {
-          title: { text: "Photon energy (eV)", font: { color: "#8b949e" } },
+          title: { text: "Photon energy (eV)", font: { color: "#aaa" } },
           showgrid:     false,
-          zerolinecolor:"#30363d",
-          tickcolor:    "#6e7681",
-          linecolor:    "#30363d",
+          zerolinecolor:"#333",
+          tickcolor:    "#aaa",
+          linecolor:    "#333",
           tickvals:     xTickVals,
           ticktext:     xTickText,
         },
         yaxis: {
-          title: { text: "kz [\u03C0/c]", font: { color: "#8b949e" } },
-          gridcolor:    "#3a4150",
-          zerolinecolor:"#30363d",
-          tickcolor:    "#6e7681",
-          linecolor:    "#30363d",
+          title: { text: "kz [π/c]", font: { color: "#aaa" } },
+          gridcolor:    "#333",
+          zerolinecolor:"#333",
+          tickcolor:    "#aaa",
+          linecolor:    "#333",
           dtick:        1,
           tick0:        0,
         },
@@ -384,18 +395,18 @@
           matches:      "y",
           tickvals:     yTickVals,
           ticktext:     yTickText,
-          tickcolor:    "#6e7681",
-          linecolor:    "#30363d",
+          tickcolor:    "#aaa",
+          linecolor:    "#333",
           showgrid:     false,
           zeroline:     false,
-          tickfont:     { color: "#c9d1d9" },
+          tickfont:     { color: "#ccc" },
         },
         margin: { t: 30, r: 45, b: 55, l: 65 },
         hovermode: "x unified",
         hoverlabel: {
-          bgcolor: "#161b22",
-          bordercolor: "#30363d",
-          font: { color: "#c9d1d9" },
+          bgcolor: "#1e1e1e",
+          bordercolor: "#333",
+          font: { color: "#ccc" },
         },
       };
 
